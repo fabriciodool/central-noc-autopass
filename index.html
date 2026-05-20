@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Operações NOC - Autopass</title>
+    <style>
+        :root {
+            --primary-color: #004B87; 
+            --secondary-color: #7A2182; 
+            --whatsapp-color: #25D366; 
+            --whatsapp-hover: #1ebd59;
+            --teams-color: #5B5FC7; 
+            --teams-hover: #464EB8;
+            --background-gradient: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --border-color: #dcdfe6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--background-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-background);
+            width: 100%;
+            max-width: 650px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 75, 135, 0.08);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            margin: 20px 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ffffff 0%, #fafdff 100%);
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .brand-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .brand-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Abas */
+        .tabs-container {
+            display: flex;
+            background: #f1f3f7;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            outline: none;
+        }
+
+        .tab-btn.active {
+            background: #ffffff;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            margin-bottom: -2px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Formulário */
+        .form-group {
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            color: var(--text-color);
+            background-color: #fcfdfe;
+            transition: all 0.2s ease-in-out;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 75, 135, 0.1);
+        }
+
+        /* Botões com Ícones */
+        .actions-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 0 30px 30px 30px;
+        }
+
+        .btn {
+            border: none;
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            color: white;
+        }
+
+        .btn-submit { background: var(--primary-color); }
+        .btn-submit:hover { background: #003663; transform: translateY(-1px); }
+        
+        .btn-whatsapp { background: var(--whatsapp-color); }
+        .btn-whatsapp:hover { background: var(--whatsapp-hover); transform: translateY(-1px); }
+
+        .btn-teams { background: var(--teams-color); }
+        .btn-teams:hover { background: var(--teams-hover); transform: translateY(-1px); }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Estado de Construção */
+        .construction-box {
+            text-align: center;
+            padding: 40px 20px;
+            color: #718096;
+        }
+
+        .construction-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        /* Output Box */
+        .output-container {
+            margin: 0 30px 20px 30px;
+            display: none;
+        }
+
+        pre {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 18px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="brand-title">⚙️ Central de Comunicação NOC</div>
+        <div class="brand-subtitle">Autopass • Acionamento e Alertas Rápidos</div>
+    </div>
+
+    <div class="tabs-container">
+        <button class="tab-btn active" id="btnTabCarimbo" onclick="switchTab('carimbo')">📝 Gerador de Carimbo</button>
+        <button class="tab-btn" id="btnTabDiario" onclick="switchTab('diario')">📖 Diário de Bordo</button>
+    </div>
+
+    <div id="tab-carimbo" class="tab-content active">
+        <div class="form-group">
+            <label for="txtChamado">Chamado:</label>
+            <input type="text" id="txtChamado" placeholder="Ex: INC123456">
+        </div>
+
+        <div class="form-group">
+            <label for="txtProblema">Problema:</label>
+            <input type="text" id="txtProblema" placeholder="Ex: Instabilidade no sistema de pagamentos nos ATMs">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="txtInicio">Início:</label>
+                <input type="text" id="txtInicio">
+            </div>
+            <div class="form-group">
+                <label for="txtFim">Fim:</label>
+                <input type="text" id="txtFim" value="Em aberto">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="txtImpacto">Impacto / Sintoma:</label>
+            <input type="text" id="txtImpacto" placeholder="Ex: Rede de vendas fora do ar, clientes sem acesso ao app">
+        </div>
+
+        <div class="form-group">
+            <label for="txtCausa">Causa:</label>
+            <input type="text" id="txtCausa" value="Em análise">
+        </div>
+
+        <div class="form-group">
+            <label for="cmbStatus">Status:</label>
+            <select id="cmbStatus">
+                <option value="Em atendimento" selected>Em atendimento</option>
+                <option value="Aguardando Fornecedor">Aguardando Fornecedor</option>
+                <option value="Contornado">Contornado</option>
+                <option value="Resolvido">Resolvido</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="txtAtualizacao">Atualização / Tratativa:</label>
+            <textarea id="txtAtualizacao" placeholder="Ex: Tratativa com time interno realizando troubleshooting..."></textarea>
+        </div>
+    </div>
+
+    <div id="tab-diario" class="tab-content">
+        <div class="construction-box">
+            <div class="construction-icon">🚧</div>
+            <h3>Módulo em Construção</h3>
+            <p style="margin-top: 10px; font-size: 14px;">Criando processo de automação para gerar o diario de bordo de uma forma mais eficiente.</p>
+        </div>
+    </div>
+
+    <div class="output-container" id="outputContainer">
+        <div style="margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #2f855a;" id="lblSucesso">✓ Texto gerado!</div>
+        <pre id="txtResultado"></pre>
+    </div>
+
+    <div class="actions-container" id="controlButtons">
+        <button class="btn btn-submit" onclick="executarAcao('copiar')">
+            <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            Gerar e Copiar
+        </button>
+        
+        <button class="btn btn-whatsapp" onclick="executarAcao('whatsapp')">
+            <svg viewBox="0 0 24 24"><path d="M12.004 2c-5.518 0-9.996 4.477-9.996 9.996 0 1.764.459 3.483 1.33 5.016l-1.417 5.176 5.305-1.392c1.478.807 3.142 1.232 4.778 1.232 5.518 0 9.996-4.477 9.996-9.996 0-5.518-4.477-9.996-9.996-9.996zm5.821 14.18c-.252.712-1.462 1.306-2.022 1.366-.511.056-1.176.084-3.219-.764-2.613-1.085-4.294-3.744-4.425-3.918-.131-.174-1.063-1.412-1.063-2.695 0-1.283.676-1.914.916-2.165.241-.251.523-.314.697-.314.174 0 .349.002.501.01.159.008.373-.06.584.45.215.52.735 1.79.797 1.921.062.13.104.283.018.456-.088.174-.131.283-.262.436-.131.152-.275.339-.392.47-.131.144-.268.302-.116.563.153.262.68 1.116 1.458 1.81.999.89 1.841 1.166 2.103 1.297.262.131.415.109.568-.066.153-.174.654-.763.83-1.025.174-.262.349-.218.589-.131.24.088 1.526.72 1.788.85.262.131.436.196.491.295.056.1.056.579-.196 1.291z"/></svg>
+            WhatsApp
+        </button>
+
+        <button class="btn btn-teams" onclick="executarAcao('teams')">
+            <svg viewBox="0 0 24 24"><path d="M12.43 11.23a2.38 2.38 0 1 0-.01-4.76 2.38 2.38 0 0 0 .01 4.76zm-6.27 1.95A1.85 1.85 0 1 0 6.15 9.5a1.85 1.85 0 0 0 .01 3.68zm12.31.23a1.72 1.72 0 1 0-.01-3.44 1.72 1.72 0 0 0 .01 3.44zM13.2 12.5h-1.55c-1.33 0-2.42 1.08-2.42 2.41v1.17c0 .5.4.9.9.9h4.59c.5 0 .9-.4.9-.9v-1.17c0-1.33-1.09-2.41-2.42-2.41zm-7.66.86h-.97a1.85 1.85 0 0 0-1.85 1.85v.85c0 .41.34.75.75.75h3.17c.41 0 .75-.34.75-.75v-.85a1.85 1.85 0 0 0-1.85-1.85zm12.55-.41h-.81a1.67 1.67 0 0 0-1.67 1.67v.78c0 .37.3.67.67.67h3.48c.37 0 .67-.3.67-.67v-.78a1.67 1.67 0 0 0-1.67-1.67z"/></svg>
+            Teams
+        </button>
+    </div>
+</div>
+
+<script>
+    let abaAtiva = "carimbo";
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const agora = new Date();
+        const dataFormatada = agora.toLocaleDateString('pt-BR') + ' ' + 
+                              String(agora.getHours()).padStart(2, '0') + ':' + 
+                              String(agora.getMinutes()).padStart(2, '0');
+        document.getElementById("txtInicio").value = dataFormatada;
+    });
+
+    function switchTab(tab) {
+        abaAtiva = tab;
+        document.getElementById("btnTabCarimbo").classList.remove("active");
+        document.getElementById("btnTabDiario").classList.remove("active");
+        document.getElementById("tab-carimbo").classList.remove("active");
+        document.getElementById("tab-diario").classList.remove("active");
+
+        if(tab === 'carimbo') {
+            document.getElementById("btnTabCarimbo").classList.add("active");
+            document.getElementById("tab-carimbo").classList.add("active");
+            document.getElementById("controlButtons").style.display = "grid";
+        } else {
+            document.getElementById("btnTabDiario").classList.add("active");
+            document.getElementById("tab-diario").classList.add("active");
+            document.getElementById("controlButtons").style.display = "none";
+        }
+        document.getElementById("outputContainer").style.display = "none";
+    }
+
+    function construirTexto(comFormatacao) {
+        const chamado = document.getElementById("txtChamado").value.trim() || "---";
+        const problema = document.getElementById("txtProblema").value.trim() || "---";
+        const inicio = document.getElementById("txtInicio").value.trim() || "---";
+        const fim = document.getElementById("txtFim").value.trim() || "---";
+        const impacto = document.getElementById("txtImpacto").value.trim() || "---";
+        const causa = document.getElementById("txtCausa").value.trim() || "---";
+        const status = document.getElementById("cmbStatus").value;
+        const atualizacao = document.getElementById("txtAtualizacao").value.trim();
+
+        const b = comFormatacao ? "*" : "";
+
+        let carimbo = `${b}Chamado:${b} ${chamado}\n` +
+                      `${b}Problema:${b} ${problema}\n` +
+                      `${b}Início:${b} ${inicio}\n` +
+                      `${b}Fim:${b} ${fim}\n` +
+                      `${b}Impacto / Sintoma:${b} ${impacto}\n` +
+                      `${b}Causa:${b} ${causa}\n` +
+                      `${b}Status:${b} ${status}`;
+
+        if (atualizacao !== "") {
+            carimbo += ` (${atualizacao})`;
+        }
+        return carimbo;
+    }
+
+    function executarAcao(tipo) {
+        const textoComNegrito = construirTexto(true);
+        const textoSemNegrito = construirTexto(false);
+
+        if (tipo === 'copiar') {
+            navigator.clipboard.writeText(textoComNegrito);
+            document.getElementById("txtResultado").innerText = textoSemNegrito;
+            document.getElementById("lblSucesso").innerText = "✓ Carimbo copiado para a área de transferência (com negritos)!";
+            document.getElementById("outputContainer").style.display = "block";
+        } 
+        
+        else if (tipo === 'whatsapp') {
+            const urlWhatsApp = `https://api.whatsapp.com/send?text=${encodeURIComponent(textoComNegrito)}`;
+            window.open(urlWhatsApp, '_blank');
+        } 
+        
+        else if (tipo === 'teams') {
+            // SOLUÇÃO DEFINITIVA: Abre o hub de compartilhamento oficial injetando a mensagem pronta
+            const urlTeamsShare = `https://teams.microsoft.com/l/share?msgText=${encodeURIComponent(textoComNegrito)}`;
+            window.open(urlTeamsShare, '_blank');
+
+            document.getElementById("txtResultado").innerText = textoSemNegrito;
+            document.getElementById("lblSucesso").innerText = "✓ Direcionando para o Teams... Escolha o grupo (CC N1/N2) na lista.";
+            document.getElementById("outputContainer").style.display = "block";
+        }
+    }
+</script>
+</body>
+</html>
