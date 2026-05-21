@@ -1,25 +1,45 @@
-# central-noc-autopass
-Central de Comunicação e acionamento rápido para a equipe de Operações NOC - Autopass.
+# Central NOC Autopass
 
+Aplicação web estática para apoiar a rotina operacional do NOC Autopass, centralizando a geração rápida de comunicados, carimbos de incidentes e diário de bordo.
 
+## Funcionalidades
 
-# ⚙️ Central de Comunicação NOC - Autopass
+- Gerador de carimbo para incidentes críticos.
+- Cópia rápida do carimbo com formatação para envio em grupos.
+- Abertura direta de compartilhamento via WhatsApp.
+- Abertura direta de compartilhamento via Microsoft Teams.
+- Diário de bordo para registro de reuniões, war rooms e tratativas de incidentes.
+- Geração de arquivo Word a partir de um modelo de diário de bordo.
+- Modo claro e modo escuro com preferência salva no navegador.
 
-Ferramenta interna desenvolvida para otimizar, padronizar e agilizar o processo de acionamento, alertas e registro de incidentes pela equipe do NOC.
+## Estrutura do projeto
 
-## 🚀 Funcionalidades
+```txt
+index.html
+styles.css
+app.js
+diario-template.js
+Arquivos
+index.html: estrutura da aplicação e campos do formulário.
+styles.css: estilos visuais, responsividade e dark mode.
+app.js: regras de negócio, geração dos textos, alternância de abas e geração do Word.
+diario-template.js: modelo base usado para gerar o arquivo Word do diário de bordo.
+Como executar localmente
+Abra o projeto com uma extensão como Live Server ou sirva a pasta com qualquer servidor estático.
 
-* 📝 **Gerador de Carimbo:** Formatação rápida e padronizada de incidentes (Chamado, Problema, Impacto, Causa e Status) para comunicação imediata.
-* 📋 **Cópia Inteligente:** Botão para gerar o carimbo mantendo as marcações de negrito prontas para as ferramentas de chat.
-* 💬 **Integração Webhook / Atalhos:** Preparado para envio ágil ou direcionamento para os canais oficiais de comunicação (**WhatsApp** e **Microsoft Teams**).
-* 📖 **Diário de Bordo (Em desenvolvimento):** Futuro módulo para automação e registro eficiente dos eventos do turno.
+Exemplo:
 
-## 🛠️ Tecnologias Utilizadas
+npx serve .
+Depois acesse o endereço local informado no terminal.
 
-* HTML5
-* CSS3 (Variáveis nativas e interface responsiva)
-* JavaScript (Vanilla JS / LocalStorage)
+Deploy
+O projeto pode ser publicado como site estático na Vercel.
 
-## 📦 Deploy
+Configuração sugerida:
 
-O projeto está configurado para deploy automático na **Vercel** integrado a este repositório. Qualquer alteração realizada na branch principal atualizará a ferramenta em produção em segundos.
+Framework Preset: Other
+Build Command: deixar vazio
+Output Directory: deixar vazio
+Root Directory: raiz do repositório
+Observações
+Para a geração do diário de bordo funcionar corretamente, os arquivos index.html, styles.css, app.js e diario-template.js devem permanecer no mesmo diretório.
