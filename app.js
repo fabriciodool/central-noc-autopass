@@ -18,6 +18,7 @@ function inicializarAplicacao() {
     configurarAbas();
     configurarAcoes();
     configurarTema();
+    configurarEscalation();
 }
 
 function preencherDatasIniciais() {
@@ -73,10 +74,13 @@ function switchTab(tab) {
 
     getEl("btnTabCarimbo").classList.toggle("active", tab === "carimbo");
     getEl("btnTabDiario").classList.toggle("active", tab === "diario");
+    getEl("btnTabEscalation").classList.toggle("active", tab === "escalation");
     getEl("tab-carimbo").classList.toggle("active", tab === "carimbo");
     getEl("tab-diario").classList.toggle("active", tab === "diario");
+    getEl("tab-escalation").classList.toggle("active", tab === "escalation");
     getEl("carimboButtons").classList.toggle("hidden", tab !== "carimbo");
     getEl("diarioButtons").classList.toggle("hidden", tab !== "diario");
+    getEl("escalationButtons").classList.toggle("hidden", tab !== "escalation");
     getEl("outputContainer").classList.remove("active");
 }
 
@@ -87,12 +91,114 @@ function executarAcao(acao) {
         "carimbo-teams": function() { executarAcaoCarimbo("teams"); },
         "diario-copiar": function() { executarAcaoDiario("copiar"); },
         "diario-word": function() { executarAcaoDiario("word"); },
-        "diario-preview": function() { executarAcaoDiario("preview"); }
+        "diario-preview": function() { executarAcaoDiario("preview"); },
+        "escalation-copiar": copiarOrientacaoEscalation,
+        "escalation-confluence": abrirConfluenceEscalation
     };
 
     if (acoes[acao]) {
         acoes[acao]();
     }
+}
+
+function configurarEscalation() {
+    renderizarEscalation();
+    getEl("txtEscalationBusca").addEventListener("input", renderizarEscalation);
+    getEl("cmbEscalationTipo").addEventListener("change", renderizarEscalation);
+}
+
+function obterEscalationsFiltrados() {
+    const termo = valorCampo("txtEscalationBusca", "").toLowerCase();
+    const tipo = getEl("cmbEscalationTipo").value;
+
+    return ESCALATION_ITEMS.filter(function(item) {
+        const correspondeTipo = tipo === "todos" || item.tipo === tipo;
+        const textoBusca = [
+            item.titulo,
+            item.resumo,
+            item.tipo,
+            item.tags.join(" "),
+            item.fluxo.join(" ")
+        ].join(" ").toLowerCase();
+
+        return correspondeTipo && (!termo || textoBusca.includes(termo));
+    });
+}
+
+function renderizarEscalation() {
+    const container = getEl("escalationCards");
+    const itens = obterEscalationsFiltrados();
+
+    if (!itens.length) {
+        container.innerHTML = "<p class=\"empty-state\">Nenhum escalation encontrado para esse filtro.</p>";
+        return;
+    }
+
+    container.innerHTML = itens.map(criarCardEscalation).join("");
+}
+
+function criarCardEscalation(item) {
+    const tags = item.tags.slice(0, 5).map(function(tag) {
+        return `<span class="tag">${escapeHtml(tag)}</span>`;
+    }).join("");
+
+    const fluxo = item.fluxo.map(function(passo) {
+        return `<li>${escapeHtml(passo)}</li>`;
+    }).join("");
+
+    return `<article class="escalation-card">
+        <div class="escalation-card-top">
+            <h3>${escapeHtml(item.titulo)}</h3>
+            <span class="type-pill">${escapeHtml(rotuloTipoEscalation(item.tipo))}</span>
+        </div>
+        <p>${escapeHtml(item.resumo)}</p>
+        <ol>${fluxo}</ol>
+        <div class="tag-list">${tags}</div>
+    </article>`;
+}
+
+function rotuloTipoEscalation(tipo) {
+    const labels = {
+        interno: "Time interno",
+        fornecedor: "Fornecedor",
+        praca: "Praça"
+    };
+
+    return labels[tipo] || tipo;
+}
+
+function construirTextoEscalation() {
+    const itens = obterEscalationsFiltrados();
+    const linhas = [
+        "Escalation TI - Orientação operacional",
+        "Base inicial: PDF exportado em 21/05/2026",
+        "Fonte oficial: " + ESCALATION_CONFLUENCE_URL,
+        "",
+        "Antes de acionar, validar contatos e ordem oficial no Confluence.",
+        ""
+    ];
+
+    itens.forEach(function(item) {
+        linhas.push(item.titulo);
+        linhas.push("Tipo: " + rotuloTipoEscalation(item.tipo));
+        linhas.push("Resumo: " + item.resumo);
+        item.fluxo.forEach(function(passo, index) {
+            linhas.push(`${index + 1}. ${passo}`);
+        });
+        linhas.push("");
+    });
+
+    return linhas.join("\n");
+}
+
+function copiarOrientacaoEscalation() {
+    const texto = construirTextoEscalation();
+    copiarTexto(texto);
+    mostrarResultado("Orientação de escalation copiada. Validar contatos no Confluence antes de acionar.", texto);
+}
+
+function abrirConfluenceEscalation() {
+    abrirUrl(ESCALATION_CONFLUENCE_URL);
 }
 
 function valorCampo(id, fallback = "---") {
@@ -484,6 +590,15 @@ function base64ParaUint8Array(base64) {
 
 function getEl(id) {
     return document.getElementById(id);
+}
+
+function escapeHtml(valor) {
+    return String(valor)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 const tabelaCrc32 = (function() {

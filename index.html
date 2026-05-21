@@ -29,6 +29,9 @@
                 <button class="tab-btn" id="btnTabDiario" type="button" data-tab-target="diario">
                     Diário de Bordo
                 </button>
+                <button class="tab-btn" id="btnTabEscalation" type="button" data-tab-target="escalation">
+                    Escalation TI
+                </button>
             </nav>
 
             <section id="tab-carimbo" class="tab-content active" aria-label="Gerador de Carimbo">
@@ -123,6 +126,43 @@
                 </div>
             </section>
 
+            <section id="tab-escalation" class="tab-content" aria-label="Escalation TI">
+                <div class="escalation-header">
+                    <div>
+                        <h2 class="section-title">Escalation TI</h2>
+                        <p class="section-description">
+                            Consulta rápida para direcionar acionamentos. Base inicial extraída do PDF gerado em 21/05/2026.
+                        </p>
+                    </div>
+
+                    <a class="btn btn-link" href="https://autopass.atlassian.net/wiki/spaces/ENOC/pages/2275737626/Escalation+TI" target="_blank" rel="noopener noreferrer">
+                        Abrir Confluence
+                    </a>
+                </div>
+
+                <div class="notice-box">
+                    <strong>Fonte oficial:</strong> sempre validar contatos, telefones, e-mails e ordem de acionamento no Confluence antes de acionar.
+                    Dados sensíveis não ficam embutidos nesta versão pública.
+                </div>
+
+                <div class="form-group">
+                    <label for="txtEscalationBusca">Buscar área, sistema ou fornecedor:</label>
+                    <input type="search" id="txtEscalationBusca" placeholder="Ex: Ilegra, Mutant, Wittel, Pefisa, Infra, Banco">
+                </div>
+
+                <div class="form-group">
+                    <label for="cmbEscalationTipo">Filtrar por tipo:</label>
+                    <select id="cmbEscalationTipo">
+                        <option value="todos" selected>Todos</option>
+                        <option value="interno">Times internos</option>
+                        <option value="fornecedor">Fornecedores</option>
+                        <option value="praca">Praças / Operação externa</option>
+                    </select>
+                </div>
+
+                <div class="escalation-grid" id="escalationCards"></div>
+            </section>
+
             <section class="output-container" id="outputContainer" aria-live="polite">
                 <p class="success-label" id="lblSucesso">Texto gerado!</p>
                 <pre id="txtResultado"></pre>
@@ -161,9 +201,21 @@
                     Pré-visualizar
                 </button>
             </footer>
+
+            <footer class="actions-container hidden" id="escalationButtons">
+                <button class="btn btn-submit" type="button" data-action="escalation-copiar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                    Copiar Orientação
+                </button>
+
+                <button class="btn btn-word" type="button" data-action="escalation-confluence">
+                    Abrir Confluence
+                </button>
+            </footer>
         </section>
     </main>
 
+    <script src="escalation-data.js"></script>
     <script src="diario-template.js"></script>
     <script src="app.js"></script>
 </body>
