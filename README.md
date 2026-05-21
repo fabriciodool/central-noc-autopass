@@ -1,45 +1,119 @@
-# Central NOC Autopass
+Central NOC Autopass
 
-Aplicação web estática para apoiar a rotina operacional do NOC Autopass, centralizando a geração rápida de comunicados, carimbos de incidentes e diário de bordo.
+Aplicação web estática desenvolvida para apoiar a rotina operacional do NOC Autopass, centralizando geração de comunicados, diário de bordo e fluxos rápidos de escalation operacional.
 
-## Funcionalidades
+Visão Geral
 
-- Gerador de carimbo para incidentes críticos.
-- Cópia rápida do carimbo com formatação para envio em grupos.
-- Abertura direta de compartilhamento via WhatsApp.
-- Abertura direta de compartilhamento via Microsoft Teams.
-- Diário de bordo para registro de reuniões, war rooms e tratativas de incidentes.
-- Geração de arquivo Word a partir de um modelo de diário de bordo.
-- Modo claro e modo escuro com preferência salva no navegador.
+A Central NOC Autopass foi criada para reduzir o tempo operacional durante incidentes, war rooms e acionamentos críticos, fornecendo uma interface rápida, padronizada e acessível para operadores.
 
-## Estrutura do projeto
+A aplicação funciona totalmente no navegador, sem necessidade de backend.
 
-```txt
+Funcionalidades
+Gerador de Carimbo
+Geração rápida de comunicados operacionais.
+Padronização de mensagens para incidentes.
+Cópia automática para compartilhamento.
+Compartilhamento direto via WhatsApp e Microsoft Teams.
+Diário de Bordo
+Registro estruturado de incidentes e reuniões.
+Exportação automática para arquivo Word.
+Modelo padronizado para documentação operacional.
+Escalation TI (Nova funcionalidade)
+
+Nova aba dedicada à consulta rápida de acionamentos operacionais.
+
+Recursos disponíveis:
+Busca por área, sistema ou fornecedor.
+Filtro por categoria:
+Times internos
+Fornecedores
+Praças
+Cards com orientação operacional.
+Fluxo resumido de acionamento.
+Botão para copiar orientações.
+Abertura rápida da página oficial no Confluence.
+Base inicial carregada a partir de PDF exportado em 21/05/2026.
+Segurança e Boas Práticas
+
+Por segurança operacional:
+
+Telefones
+E-mails
+Credenciais
+Dados sensíveis
+
+não foram embarcados no JavaScript da aplicação.
+
+A interface apenas orienta o operador e direciona para validação oficial no Confluence corporativo.
+
+Isso evita exposição indevida caso o repositório ou deploy público sejam acessados externamente.
+
+Preview da Interface
+Aba Escalation TI
+Tecnologias Utilizadas
+HTML5
+CSS3
+JavaScript Vanilla
+DOCX Template Generation
+Vercel (deploy estático)
+Estrutura do Projeto
 index.html
 styles.css
 app.js
 diario-template.js
 Arquivos
-index.html: estrutura da aplicação e campos do formulário.
-styles.css: estilos visuais, responsividade e dark mode.
-app.js: regras de negócio, geração dos textos, alternância de abas e geração do Word.
-diario-template.js: modelo base usado para gerar o arquivo Word do diário de bordo.
-Como executar localmente
-Abra o projeto com uma extensão como Live Server ou sirva a pasta com qualquer servidor estático.
+Arquivo	Descrição
+index.html	Estrutura principal da aplicação
+styles.css	Layout, responsividade e dark mode
+app.js	Regras de negócio e funcionalidades
+diario-template.js	Template do diário de bordo
+Como Executar Localmente
 
-Exemplo:
+Clone o repositório:
+
+git clone https://github.com/fabriciodool/central-noc-autopass.git
+
+Acesse a pasta:
+
+cd central-noc-autopass
+
+Execute com qualquer servidor estático.
+
+Exemplo usando serve:
 
 npx serve .
-Depois acesse o endereço local informado no terminal.
+
+Depois acesse o endereço exibido no terminal.
 
 Deploy
-O projeto pode ser publicado como site estático na Vercel.
 
-Configuração sugerida:
+O projeto pode ser publicado facilmente na Vercel.
 
-Framework Preset: Other
-Build Command: deixar vazio
-Output Directory: deixar vazio
-Root Directory: raiz do repositório
-Observações
-Para a geração do diário de bordo funcionar corretamente, os arquivos index.html, styles.css, app.js e diario-template.js devem permanecer no mesmo diretório.
+Configuração sugerida
+Configuração	Valor
+Framework Preset	Other
+Build Command	vazio
+Output Directory	vazio
+Root Directory	raiz do projeto
+Validações Realizadas
+Aba Escalation TI carregando corretamente.
+Busca funcionando.
+Filtros renderizando corretamente.
+Sem erros no console.
+Compatível com Live Server.
+Dark mode persistindo corretamente.
+Objetivo do Projeto
+
+Centralizar ferramentas operacionais do NOC em uma interface simples, rápida e segura, reduzindo tempo de resposta em incidentes e padronizando processos operacionais.
+
+Roadmap Futuro
+Exportação PDF
+Histórico local de incidentes
+Integração com APIs internas
+Favoritos de acionamento
+Busca avançada
+Modo offline
+Templates dinâmicos
+Licença
+
+Projeto de uso interno e operacional.
